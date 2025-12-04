@@ -12,7 +12,8 @@ async def get_quote_request(requeste_quote: QuoteRequestDTO, quote_request_use_c
         customer_name=requeste_quote.name,
         customer_email=requeste_quote.email,
         service_details=requeste_quote.service,
-        customer_message=requeste_quote.message
+        customer_message=requeste_quote.message,
+        captcha_token=requeste_quote.captcha_token
     ))
 
     return {"sent": sent, "message": message}
