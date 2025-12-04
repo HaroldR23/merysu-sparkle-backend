@@ -6,3 +6,4 @@ class QuoteRequestInput:
     customer_email: str
     service_details: str
     customer_message: str
+    captcha_token: str
