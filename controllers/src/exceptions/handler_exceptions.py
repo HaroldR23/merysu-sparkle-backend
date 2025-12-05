@@ -1,10 +1,9 @@
+from slowapi.errors import RateLimitExceeded
+
 from fastapi import FastAPI, Request
-from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+
 from http import HTTPStatus
-
-
-from starlette.exceptions import HTTPException
 
 from domain.src.exceptions.quote_request_exceptions import CaptchaValidationError, EmailSendingError, InvalidEmailError
 
@@ -29,4 +28,11 @@ def register_exception_handler(app: FastAPI) -> None:
         return JSONResponse(
             status_code=HTTPStatus.BAD_REQUEST,
             content={"detail": exc.message},
+        )
+
+    @app.exception_handler(RateLimitExceeded)
+    def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "Too many requests, please wait."}
         )
