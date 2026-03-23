@@ -1,7 +1,7 @@
 from domain.src.exceptions.quote_request_exceptions import CaptchaValidationError, EmailSendingError, InvalidEmailError
-from domain.src.ports.CaptchaService import CaptchaService
-from domain.src.ports.EmailSenderService import EmailSenderService
-from domain.src.ports.EmailVerifierService import EmailVerifierService
+from domain.src.ports.services.CaptchaService import CaptchaService
+from domain.src.ports.services.EmailSenderService import EmailSenderService
+from domain.src.ports.services.EmailVerifierService import EmailVerifierService
 
 from settings.env_variables import COMPANY_EMAIL_RECIPIENT
 

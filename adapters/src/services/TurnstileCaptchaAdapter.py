@@ -1,6 +1,6 @@
 import httpx
 
-from domain.src.ports.CaptchaService import CaptchaService
+from domain.src.ports.services.CaptchaService import CaptchaService
 from settings.env_variables import TURNSTILE_SECRET_KEY
 
 

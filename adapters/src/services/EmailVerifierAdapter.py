@@ -1,6 +1,6 @@
 import dns.resolver
 
-from domain.src.ports.EmailVerifierService import EmailVerifierService
+from domain.src.ports.services.EmailVerifierService import EmailVerifierService
 
 
 """This serive will have to be replaced with a third-party email verification service in the future"""

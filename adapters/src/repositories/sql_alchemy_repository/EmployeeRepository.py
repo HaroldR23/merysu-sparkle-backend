@@ -5,10 +5,9 @@ from uuid import UUID
 from adapters.src.models.EmployeeModel import EmployeeModel
 from domain.src.entities.employee import Employee
 from domain.src.exceptions.employee_exceptions import EmployeeCreationError
-from domain.src.ports.EmployeeRepositoryService import EmployeeRepositoryService
+from domain.src.ports.repositories.EmployeeRepository import EmployeeRepository
 
-
-class EmployeeRepository(EmployeeRepositoryService):
+class EmployeeRepositoryAdapter(EmployeeRepository):
     def __init__(self, session: Session):
         self.session = session
 
