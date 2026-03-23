@@ -2,7 +2,7 @@ import asyncio
 import resend
 
 from domain.src.exceptions.quote_request_exceptions import EmailSendingError
-from domain.src.ports.EmailSenderService import EmailSenderService
+from domain.src.ports.services.EmailSenderService import EmailSenderService
 from settings.env_variables import RESEND_API_KEY, COMPANY_EMAIL_SENDER
 
 resend.api_key = RESEND_API_KEY

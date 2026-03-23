@@ -1,12 +1,12 @@
 from domain.src.entities.employee import Employee  # used to build the domain object before persisting
 from domain.src.exceptions.employee_exceptions import InvalidEmployeeDataError
-from domain.src.ports.EmployeeRepositoryService import EmployeeRepositoryService
+from domain.src.ports.repositories.EmployeeRepository import EmployeeRepository
 from use_cases.src.employee_creation.input import EmployeeCreationInput
 from use_cases.src.employee_creation.output import EmployeeCreationOutput
 
 
 class EmployeeCreationUseCase:
-    def __init__(self, employee_repository: EmployeeRepositoryService):
+    def __init__(self, employee_repository: EmployeeRepository):
         self.employee_repository = employee_repository
 
     def __call__(self, employee_creation_input: EmployeeCreationInput) -> EmployeeCreationOutput:

@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 
 from http import HTTPStatus
 
+from domain.src.exceptions.customer_exceptions import CustomerCreationError, InvalidCustomerDataError
 from domain.src.exceptions.employee_exceptions import EmployeeCreationError, InvalidEmployeeDataError
 from domain.src.exceptions.quote_request_exceptions import CaptchaValidationError, EmailSendingError, InvalidEmailError
 
@@ -40,6 +41,20 @@ def register_exception_handler(app: FastAPI) -> None:
 
     @app.exception_handler(EmployeeCreationError)
     def employee_creation_error_handler(request: Request, exc: EmployeeCreationError):
+        return JSONResponse(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            content={"detail": exc.message},
+        )
+
+    @app.exception_handler(InvalidCustomerDataError)
+    def invalid_customer_data_handler(request: Request, exc: InvalidCustomerDataError):
+        return JSONResponse(
+            status_code=HTTPStatus.BAD_REQUEST,
+            content={"detail": exc.message},
+        )
+
+    @app.exception_handler(CustomerCreationError)
+    def customer_creation_error_handler(request: Request, exc: CustomerCreationError):
         return JSONResponse(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             content={"detail": exc.message},
