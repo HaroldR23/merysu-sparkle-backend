@@ -1,9 +1,11 @@
-from sqlalchemy.orm import Session
 from typing import cast
 from uuid import UUID
 
+from sqlalchemy import func, select
+from sqlalchemy.orm import Session
+
 from adapters.src.models.EmployeeModel import EmployeeModel
-from domain.src.entities.employee import Employee
+from domain.src.entities.employee import Employee, EmployeeSummary
 from domain.src.exceptions.employee_exceptions import EmployeeCreationError
 from domain.src.ports.repositories.EmployeeRepository import EmployeeRepository
 
@@ -44,3 +46,24 @@ class EmployeeRepositoryAdapter(EmployeeRepository):
         if db_employee is None:
             return None
         return self._to_domain(db_employee)
+
+    def get_all_with_summary(self) -> tuple[list[Employee], EmployeeSummary]:
+        db_employees = self.session.scalars(select(EmployeeModel)).all()
+
+        agg = self.session.execute(
+            select(
+                func.count(EmployeeModel.id),
+                func.coalesce(func.sum(EmployeeModel.worked_hours), 0.0),
+                func.coalesce(func.sum(EmployeeModel.employee_cost), 0.0),
+                func.coalesce(func.sum(EmployeeModel.services_count), 0),
+            )
+        ).one()
+
+        summary = EmployeeSummary(
+            total_employees=agg[0],
+            total_hours=float(agg[1]),
+            total_cost=float(agg[2]),
+            total_services=int(agg[3]),
+        )
+
+        return [self._to_domain(e) for e in db_employees], summary

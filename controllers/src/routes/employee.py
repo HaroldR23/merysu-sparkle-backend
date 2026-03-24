@@ -1,9 +1,19 @@
 from fastapi import APIRouter, Depends
 
-from controllers.src.dependencies.employee_dependencies import get_employee_creation_use_case
-from controllers.src.dtos.employee import EmployeeCreateDTO, EmployeeCreateResponseDTO
+from controllers.src.dependencies.employee_dependencies import (
+    get_employee_creation_use_case,
+    get_employee_list_use_case,
+)
+from controllers.src.dtos.employee import (
+    EmployeeCreateDTO,
+    EmployeeCreateResponseDTO,
+    EmployeeListItemResponseDTO,
+    EmployeeListResponseDTO,
+    EmployeeSummaryResponseDTO,
+)
 from use_cases.src.employee_creation.input import EmployeeCreationInput
 from use_cases.src.employee_creation.use_case import EmployeeCreationUseCase
+from use_cases.src.employee_list.use_case import EmployeeListUseCase
 
 employee_router = APIRouter()
 
@@ -30,4 +40,30 @@ def create_employee(
         phone_number=employee.phone_number,
         worked_hours=employee.worked_hours,
         employee_cost=employee.employee_cost,
+    )
+
+
+@employee_router.get("/employees", status_code=200, response_model=EmployeeListResponseDTO)
+def get_employees(
+    employee_list_use_case: EmployeeListUseCase = Depends(get_employee_list_use_case),
+):
+    result = employee_list_use_case()
+
+    return EmployeeListResponseDTO(
+        summary=EmployeeSummaryResponseDTO(
+            total_employees=result.summary.total_employees,
+            total_hours=result.summary.total_hours,
+            total_cost=result.summary.total_cost,
+            total_services=result.summary.total_services,
+        ),
+        employees=[
+            EmployeeListItemResponseDTO(
+                id=e.id,
+                name=e.name,
+                worked_hours=e.worked_hours,
+                employee_cost=e.employee_cost,
+                services_count=e.services_count,
+            )
+            for e in result.employees
+        ],
     )
