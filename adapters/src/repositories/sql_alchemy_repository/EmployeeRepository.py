@@ -38,3 +38,9 @@ class EmployeeRepositoryAdapter(EmployeeRepository):
             raise EmployeeCreationError() from e
 
         return self._to_domain(db_employee)
+
+    def get_by_id(self, id: UUID) -> Employee | None:
+        db_employee = self.session.get(EmployeeModel, id)
+        if db_employee is None:
+            return None
+        return self._to_domain(db_employee)

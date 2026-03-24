@@ -1,11 +1,16 @@
-from datetime import datetime, timezone
+from __future__ import annotations
 
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 
 from sqlalchemy import DateTime, Float, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from adapters.src.models.Base import Base
+
+if TYPE_CHECKING:
+    from adapters.src.models.ServiceModel import ServiceModel
 
 
 class CustomerModel(Base):
@@ -20,3 +25,5 @@ class CustomerModel(Base):
     status: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
+
+    services: Mapped[list["ServiceModel"]] = relationship("ServiceModel", back_populates="customer")

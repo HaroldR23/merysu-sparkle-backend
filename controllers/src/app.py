@@ -1,5 +1,3 @@
-from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,6 +8,7 @@ from controllers.src.exceptions.handler_exceptions import register_exception_han
 from controllers.src.routes.customer import customer_router
 from controllers.src.routes.employee import employee_router
 from controllers.src.routes.quote_request import quote_request_router
+from controllers.src.routes.service import service_router
 from settings.env_variables import get_allowed_origins
 
 
@@ -32,6 +31,7 @@ def create_app() -> FastAPI:
     app.include_router(quote_request_router)
     app.include_router(employee_router)
     app.include_router(customer_router)
+    app.include_router(service_router)
 
     register_exception_handler(app)
   

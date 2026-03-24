@@ -10,3 +10,10 @@ class EmployeeCreationError(Exception):
     def __init__(self, message="Failed to create employee."):
         self.message = message
         super().__init__(self.message)
+
+
+class EmployeeNotFoundError(Exception):
+    """Exception raised when an employee with the given ID does not exist."""
+    def __init__(self, message="Employee not found."):
+        self.message = message
+        super().__init__(self.message)

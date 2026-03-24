@@ -10,3 +10,10 @@ class CustomerCreationError(Exception):
     def __init__(self, message="Failed to create customer."):
         self.message = message
         super().__init__(self.message)
+
+
+class CustomerNotFoundError(Exception):
+    """Exception raised when a customer with the given ID does not exist."""
+    def __init__(self, message="Customer not found."):
+        self.message = message
+        super().__init__(self.message)
