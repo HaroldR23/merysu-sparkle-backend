@@ -5,8 +5,8 @@ from fastapi.responses import JSONResponse
 
 from http import HTTPStatus
 
-from domain.src.exceptions.customer_exceptions import CustomerCreationError, InvalidCustomerDataError
-from domain.src.exceptions.employee_exceptions import EmployeeCreationError, InvalidEmployeeDataError
+from domain.src.exceptions.customer_exceptions import CustomerCreationError, CustomerNotFoundError, InvalidCustomerDataError
+from domain.src.exceptions.employee_exceptions import EmployeeCreationError, EmployeeNotFoundError, InvalidEmployeeDataError
 from domain.src.exceptions.quote_request_exceptions import CaptchaValidationError, EmailSendingError, InvalidEmailError
 from domain.src.exceptions.service_exceptions import InvalidServiceDataError, ServiceCreationError
 
@@ -47,6 +47,13 @@ def register_exception_handler(app: FastAPI) -> None:
             content={"detail": exc.message},
         )
 
+    @app.exception_handler(EmployeeNotFoundError)
+    def employee_not_found_handler(request: Request, exc: EmployeeNotFoundError):
+        return JSONResponse(
+            status_code=HTTPStatus.NOT_FOUND,
+            content={"detail": exc.message},
+        )
+
     @app.exception_handler(InvalidCustomerDataError)
     def invalid_customer_data_handler(request: Request, exc: InvalidCustomerDataError):
         return JSONResponse(
@@ -58,6 +65,13 @@ def register_exception_handler(app: FastAPI) -> None:
     def customer_creation_error_handler(request: Request, exc: CustomerCreationError):
         return JSONResponse(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            content={"detail": exc.message},
+        )
+
+    @app.exception_handler(CustomerNotFoundError)
+    def customer_not_found_handler(request: Request, exc: CustomerNotFoundError):
+        return JSONResponse(
+            status_code=HTTPStatus.NOT_FOUND,
             content={"detail": exc.message},
         )
 

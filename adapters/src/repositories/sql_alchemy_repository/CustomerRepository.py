@@ -9,6 +9,9 @@ from domain.src.exceptions.customer_exceptions import CustomerCreationError
 from domain.src.ports.repositories.CustomerRepository import CustomerRepository
 
 
+
+
+
 class CustomerRepositoryAdapter(CustomerRepository):
     def __init__(self, session: Session):
         self.session = session
@@ -43,4 +46,10 @@ class CustomerRepositoryAdapter(CustomerRepository):
             self.session.rollback()
             raise CustomerCreationError() from e
 
+        return self._to_domain(db_customer)
+
+    def get_by_id(self, id: UUID) -> Customer | None:
+        db_customer = self.session.get(CustomerModel, id)
+        if db_customer is None:
+            return None
         return self._to_domain(db_customer)

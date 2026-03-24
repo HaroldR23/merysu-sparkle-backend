@@ -1,15 +1,26 @@
 from datetime import datetime
 
 from domain.src.entities.service import Service
+from domain.src.exceptions.customer_exceptions import CustomerNotFoundError
+from domain.src.exceptions.employee_exceptions import EmployeeNotFoundError
 from domain.src.exceptions.service_exceptions import InvalidServiceDataError
+from domain.src.ports.repositories.CustomerRepository import CustomerRepository
+from domain.src.ports.repositories.EmployeeRepository import EmployeeRepository
 from domain.src.ports.repositories.ServiceRepository import ServiceRepository
 from use_cases.src.service_creation.input import ServiceCreationInput
 from use_cases.src.service_creation.output import ServiceCreationOutput
 
 
 class ServiceCreationUseCase:
-    def __init__(self, service_repository: ServiceRepository):
+    def __init__(
+        self,
+        service_repository: ServiceRepository,
+        customer_repository: CustomerRepository,
+        employee_repository: EmployeeRepository,
+    ):
         self.service_repository = service_repository
+        self.customer_repository = customer_repository
+        self.employee_repository = employee_repository
 
     def __call__(self, service_creation_input: ServiceCreationInput) -> ServiceCreationOutput:
         if not service_creation_input.address.strip():
@@ -27,6 +38,13 @@ class ServiceCreationUseCase:
         ]:
             if value < 0:
                 raise InvalidServiceDataError(f"{field_name} must be a non-negative number.")
+
+        if self.customer_repository.get_by_id(service_creation_input.customer_id) is None:
+            raise CustomerNotFoundError(f"Customer with id '{service_creation_input.customer_id}' not found.")
+
+        if service_creation_input.employee_id is not None:
+            if self.employee_repository.get_by_id(service_creation_input.employee_id) is None:
+                raise EmployeeNotFoundError(f"Employee with id '{service_creation_input.employee_id}' not found.")
 
         service = Service(
             date=service_creation_input.date,
