@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 from uuid import UUID
 
+
 class EmployeeCreateDTO(BaseModel):
     name: str
     services_count: int = Field(ge=0)
@@ -23,3 +24,23 @@ class EmployeeCreateResponseDTO(BaseModel):
     phone_number: str
     worked_hours: float
     employee_cost: float
+
+
+class EmployeeSummaryResponseDTO(BaseModel):
+    total_employees: int
+    total_hours: float
+    total_cost: float
+    total_services: int
+
+
+class EmployeeListItemResponseDTO(BaseModel):
+    id: UUID
+    name: str
+    worked_hours: float
+    employee_cost: float
+    services_count: int
+
+
+class EmployeeListResponseDTO(BaseModel):
+    summary: EmployeeSummaryResponseDTO
+    employees: list[EmployeeListItemResponseDTO]

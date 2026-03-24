@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
+
 @dataclass
 class Employee:
     name: str
@@ -9,3 +10,11 @@ class Employee:
     worked_hours: float
     employee_cost: float
     id: UUID | None = None
+
+
+@dataclass
+class EmployeeSummary:
+    total_employees: int
+    total_hours: float
+    total_cost: float
+    total_services: int
