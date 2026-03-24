@@ -8,6 +8,7 @@ from http import HTTPStatus
 from domain.src.exceptions.customer_exceptions import CustomerCreationError, InvalidCustomerDataError
 from domain.src.exceptions.employee_exceptions import EmployeeCreationError, InvalidEmployeeDataError
 from domain.src.exceptions.quote_request_exceptions import CaptchaValidationError, EmailSendingError, InvalidEmailError
+from domain.src.exceptions.service_exceptions import InvalidServiceDataError, ServiceCreationError
 
 def register_exception_handler(app: FastAPI) -> None:
 
@@ -55,6 +56,20 @@ def register_exception_handler(app: FastAPI) -> None:
 
     @app.exception_handler(CustomerCreationError)
     def customer_creation_error_handler(request: Request, exc: CustomerCreationError):
+        return JSONResponse(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            content={"detail": exc.message},
+        )
+
+    @app.exception_handler(InvalidServiceDataError)
+    def invalid_service_data_handler(request: Request, exc: InvalidServiceDataError):
+        return JSONResponse(
+            status_code=HTTPStatus.BAD_REQUEST,
+            content={"detail": exc.message},
+        )
+
+    @app.exception_handler(ServiceCreationError)
+    def service_creation_error_handler(request: Request, exc: ServiceCreationError):
         return JSONResponse(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             content={"detail": exc.message},

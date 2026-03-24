@@ -1,0 +1,12 @@
+from fastapi import Depends
+from sqlalchemy.orm import Session
+
+from adapters.src.repositories.sql_alchemy_repository.ServiceRepository import ServiceRepositoryAdapter
+from adapters.src.repositories.sql_alchemy_repository.db_config import get_db
+from use_cases.src.service_creation.use_case import ServiceCreationUseCase
+
+
+def get_service_creation_use_case(db: Session = Depends(get_db)) -> ServiceCreationUseCase:
+    return ServiceCreationUseCase(
+        service_repository=ServiceRepositoryAdapter(session=db)
+    )
