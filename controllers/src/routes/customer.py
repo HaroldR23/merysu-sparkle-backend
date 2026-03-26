@@ -1,9 +1,21 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
-from controllers.src.dependencies.customer_dependencies import get_customer_creation_use_case
-from controllers.src.dtos.customer import CustomerCreateDTO, CustomerCreateResponseDTO
+from controllers.src.dependencies.customer_dependencies import (
+    get_customer_creation_use_case,
+    get_customer_list_use_case,
+)
+from controllers.src.dtos.customer import (
+    CustomerCreateDTO,
+    CustomerCreateResponseDTO,
+    CustomerListItemResponseDTO,
+    CustomerListResponseDTO,
+    CustomerSummaryResponseDTO,
+)
+from domain.src.entities.customer import CustomerStatus, CustomerType
 from use_cases.src.customer_creation.input import CustomerCreationInput
 from use_cases.src.customer_creation.use_case import CustomerCreationUseCase
+from use_cases.src.customer_list.input import CustomerListInput
+from use_cases.src.customer_list.use_case import CustomerListUseCase
 
 customer_router = APIRouter()
 
@@ -34,4 +46,45 @@ def create_customer(
         status=customer.status,
         created_at=customer.created_at,
         updated_at=customer.updated_at,
+    )
+
+
+@customer_router.get("/customers", status_code=200, response_model=CustomerListResponseDTO)
+def get_customers(
+    status: CustomerStatus | None = Query(default=None),
+    type: CustomerType | None = Query(default=None),
+    search: str | None = Query(default=None, max_length=100),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=20, ge=1, le=100),
+    customer_list_use_case: CustomerListUseCase = Depends(get_customer_list_use_case),
+):
+    result = customer_list_use_case(
+        customer_list_input=CustomerListInput(
+            status=status,
+            type=type,
+            search=search,
+            page=page,
+            page_size=page_size,
+        )
+    )
+
+    return CustomerListResponseDTO(
+        summary=CustomerSummaryResponseDTO(
+            total_clients=result.summary.total_clients,
+            total_billing=result.summary.total_billing,
+            total_services=result.summary.total_services,
+            average_billing_per_client=result.summary.average_billing_per_client,
+        ),
+        customers=[
+            CustomerListItemResponseDTO(
+                id=c.id,
+                name=c.name,
+                type=c.type,
+                services_count=c.services_count,
+                total_billed=c.total_billed,
+                status=c.status,
+                last_service_date=c.last_service_date,
+            )
+            for c in result.customers
+        ],
     )

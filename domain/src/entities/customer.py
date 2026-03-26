@@ -25,3 +25,11 @@ class Customer:
     id: UUID | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
+
+
+@dataclass
+class CustomerSummary:
+    total_clients: int
+    total_billing: float
+    total_services: int
+    average_billing_per_client: float
