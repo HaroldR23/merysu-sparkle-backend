@@ -1,8 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, datetime, time
 from uuid import UUID
 
-from domain.src.entities.service import ServiceType
+from domain.src.entities.service import ServiceStatus, ServiceType
 
 
 @dataclass
@@ -19,7 +19,8 @@ class ServiceCreationOutput:
     hourly_rate: float
     total_cost: float
     charged_price: float
+    status: ServiceStatus
     created_at: datetime
     updated_at: datetime
-    employee_id: UUID | None = None
+    employee_ids: list[UUID] = field(default_factory=list)
     internal_notes: str | None = None

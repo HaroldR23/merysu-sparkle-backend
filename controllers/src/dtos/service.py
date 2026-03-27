@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field, field_validator
 
-from domain.src.entities.service import ServiceType
+from domain.src.entities.service import ServiceStatus, ServiceType
 
 
 class ServiceCreateDTO(BaseModel):
@@ -18,7 +18,8 @@ class ServiceCreateDTO(BaseModel):
     hourly_rate: float = Field(ge=0)
     total_cost: float = Field(ge=0)
     charged_price: float = Field(ge=0)
-    employee_id: UUID | None = None
+    status: ServiceStatus
+    employee_ids: list[UUID] = Field(default_factory=list)
     internal_notes: str | None = None
 
     @field_validator("address")
@@ -42,7 +43,25 @@ class ServiceCreateResponseDTO(BaseModel):
     hourly_rate: float
     total_cost: float
     charged_price: float
+    status: ServiceStatus
     created_at: datetime
     updated_at: datetime
-    employee_id: UUID | None
+    employee_ids: list[UUID]
     internal_notes: str | None
+
+
+class ServiceListItemResponseDTO(BaseModel):
+    id: UUID
+    date: date
+    customer_name: str
+    service_type: ServiceType
+    employee_names: list[str]
+    worked_hours: float
+    charged_price: float
+    total_cost: float
+    margin: float
+    status: ServiceStatus
+
+
+class ServiceListResponseDTO(BaseModel):
+    services: list[ServiceListItemResponseDTO]
