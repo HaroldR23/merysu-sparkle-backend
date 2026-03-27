@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, datetime, time
 from enum import Enum
 from uuid import UUID
@@ -10,6 +10,11 @@ class ServiceType(str, Enum):
     deep_cleaning = "deep_cleaning"
     move_in_out = "move_in_out"
     post_construction = "post_construction"
+
+
+class ServiceStatus(str, Enum):
+    completed = "completed"
+    pending = "pending"
 
 
 @dataclass
@@ -25,8 +30,23 @@ class Service:
     hourly_rate: float
     total_cost: float
     charged_price: float
-    employee_id: UUID | None = None
+    status: ServiceStatus
+    employee_ids: list[UUID] = field(default_factory=list)
     internal_notes: str | None = None
     id: UUID | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
+
+
+@dataclass
+class ServiceListItem:
+    id: UUID
+    date: date
+    customer_name: str
+    service_type: ServiceType
+    employee_names: list[str]
+    worked_hours: float
+    charged_price: float
+    total_cost: float
+    margin: float
+    status: ServiceStatus

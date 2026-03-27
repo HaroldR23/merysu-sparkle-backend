@@ -7,6 +7,7 @@ from sqlalchemy import Float, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .Base import Base
+from adapters.src.models.ServiceModel import service_employees
 
 if TYPE_CHECKING:
     from adapters.src.models.ServiceModel import ServiceModel
@@ -22,4 +23,6 @@ class EmployeeModel(Base):
     worked_hours: Mapped[float] = mapped_column(Float, nullable=False)
     employee_cost: Mapped[float] = mapped_column(Float, nullable=False)
 
-    services: Mapped[list["ServiceModel"]] = relationship("ServiceModel", back_populates="employee")
+    services: Mapped[list["ServiceModel"]] = relationship(
+        "ServiceModel", secondary=service_employees, back_populates="employees"
+    )
