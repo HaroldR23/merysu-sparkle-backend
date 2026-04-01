@@ -26,6 +26,11 @@ class CustomerCreationUseCase:
             services_count=customer_creation_input.services_count,
             total_billed=customer_creation_input.total_billed,
             last_service_date=customer_creation_input.last_service_date,
+            email=customer_creation_input.email,
+            phone_number=customer_creation_input.phone_number,
+            location=customer_creation_input.location,
+            city=customer_creation_input.city,
+            notes=customer_creation_input.notes,
             status=customer_creation_input.status,
         )
 
@@ -41,7 +46,12 @@ class CustomerCreationUseCase:
             services_count=created.services_count,
             total_billed=created.total_billed,
             last_service_date=created.last_service_date,
+            email=created.email,
+            phone_number=created.phone_number,
+            location=created.location,
+            city=created.city,
+            notes=created.notes,
             status=created.status,
             created_at=created.created_at or datetime.now(),
-            updated_at=created.updated_at  or datetime.now(),
+            updated_at=created.updated_at or datetime.now(),
         )

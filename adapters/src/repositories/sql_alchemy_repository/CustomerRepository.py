@@ -25,6 +25,11 @@ class CustomerRepositoryAdapter(CustomerRepository):
             services_count=db_customer.services_count,
             total_billed=db_customer.total_billed,
             last_service_date=db_customer.last_service_date,
+            email=db_customer.email,
+            phone_number=db_customer.phone_number,
+            location=db_customer.location,
+            city=db_customer.city,
+            notes=db_customer.notes,
             status=CustomerStatus(db_customer.status),
             created_at=db_customer.created_at,
             updated_at=db_customer.updated_at,
@@ -37,6 +42,11 @@ class CustomerRepositoryAdapter(CustomerRepository):
             services_count=customer.services_count,
             total_billed=customer.total_billed,
             last_service_date=customer.last_service_date,
+            email=customer.email,
+            phone_number=customer.phone_number,
+            location=customer.location,
+            city=customer.city,
+            notes=customer.notes,
             status=customer.status.value,
         )
         try:

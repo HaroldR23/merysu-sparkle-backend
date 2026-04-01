@@ -13,6 +13,11 @@ class CustomerCreateDTO(BaseModel):
     total_billed: float = Field(ge=0)
     status: CustomerStatus
     last_service_date: datetime | None = None
+    email: str | None = None
+    phone_number: str | None = None
+    location: str | None = None
+    city: str | None = None
+    notes: str | None = None
 
     @field_validator("name")
     @classmethod
@@ -30,6 +35,11 @@ class CustomerCreateResponseDTO(BaseModel):
     total_billed: float
     status: CustomerStatus
     last_service_date: datetime | None
+    email: str | None
+    phone_number: str | None
+    location: str | None
+    city: str | None
+    notes: str | None
     created_at: datetime
     updated_at: datetime
 
@@ -49,6 +59,11 @@ class CustomerListItemResponseDTO(BaseModel):
     total_billed: float
     status: CustomerStatus
     last_service_date: datetime | None
+    email: str | None
+    phone_number: str | None
+    location: str | None
+    city: str | None
+    notes: str | None
 
 
 class CustomerListResponseDTO(BaseModel):

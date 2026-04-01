@@ -22,6 +22,11 @@ class CustomerListItemOutput:
     total_billed: float
     status: CustomerStatus
     last_service_date: datetime | None
+    email: str | None = None
+    phone_number: str | None = None
+    location: str | None = None
+    city: str | None = None
+    notes: str | None = None
 
 
 @dataclass
