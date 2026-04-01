@@ -44,6 +44,11 @@ class CustomerListUseCase:
                     total_billed=c.total_billed,
                     status=c.status,
                     last_service_date=c.last_service_date,
+                    email=c.email,
+                    phone_number=c.phone_number,
+                    location=c.location,
+                    city=c.city,
+                    notes=c.notes,
                 )
                 for c in customers
             ],

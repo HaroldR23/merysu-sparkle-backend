@@ -32,6 +32,11 @@ def create_customer(
             services_count=customer_dto.services_count,
             total_billed=customer_dto.total_billed,
             last_service_date=customer_dto.last_service_date,
+            email=customer_dto.email,
+            phone_number=customer_dto.phone_number,
+            location=customer_dto.location,
+            city=customer_dto.city,
+            notes=customer_dto.notes,
             status=customer_dto.status,
         )
     )
@@ -43,6 +48,11 @@ def create_customer(
         services_count=customer.services_count,
         total_billed=customer.total_billed,
         last_service_date=customer.last_service_date,
+        email=customer.email,
+        phone_number=customer.phone_number,
+        location=customer.location,
+        city=customer.city,
+        notes=customer.notes,
         status=customer.status,
         created_at=customer.created_at,
         updated_at=customer.updated_at,
@@ -84,6 +94,11 @@ def get_customers(
                 total_billed=c.total_billed,
                 status=c.status,
                 last_service_date=c.last_service_date,
+                email=c.email,
+                phone_number=c.phone_number,
+                location=c.location,
+                city=c.city,
+                notes=c.notes,
             )
             for c in result.customers
         ],

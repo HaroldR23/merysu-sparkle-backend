@@ -16,3 +16,8 @@ class CustomerCreationOutput:
     created_at: datetime
     updated_at: datetime
     last_service_date: datetime | None = None
+    email: str | None = None
+    phone_number: str | None = None
+    location: str | None = None
+    city: str | None = None
+    notes: str | None = None
