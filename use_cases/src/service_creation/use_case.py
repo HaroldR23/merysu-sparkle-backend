@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time, timezone
 
 from domain.src.entities.service import Service
 from domain.src.exceptions.customer_exceptions import CustomerNotFoundError
@@ -68,6 +68,31 @@ class ServiceCreationUseCase:
         if created.id is None:
             raise InvalidServiceDataError("Service created without an ID.")
 
+        service_datetime = datetime.combine(created.date, time.min, tzinfo=timezone.utc)
+
+        self.customer_repository.update_stats(
+            id=created.customer_id,
+            services_count_delta=1,
+            total_billed_delta=created.charged_price,
+            last_service_date=service_datetime,
+        )
+
+        if created.employee_ids:
+            cost_per_employee = created.total_cost / len(created.employee_ids)
+            for employee_id in created.employee_ids:
+                self.employee_repository.update_stats(
+                    id=employee_id,
+                    services_count_delta=1,
+                    worked_hours_delta=created.worked_hours,
+                    employee_cost_delta=cost_per_employee,
+                )
+
+        margin = (
+            round((created.charged_price - created.total_cost) / created.charged_price * 100, 1)
+            if created.charged_price > 0
+            else 0.0
+        )
+
         return ServiceCreationOutput(
             id=created.id,
             date=created.date,
@@ -82,6 +107,7 @@ class ServiceCreationUseCase:
             hourly_rate=created.hourly_rate,
             total_cost=created.total_cost,
             charged_price=created.charged_price,
+            margin=margin,
             status=created.status,
             internal_notes=created.internal_notes,
             created_at=created.created_at or datetime.now(),

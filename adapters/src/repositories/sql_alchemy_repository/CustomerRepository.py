@@ -1,4 +1,5 @@
 from typing import cast
+from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy import func, select
@@ -6,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from adapters.src.models.CustomerModel import CustomerModel
 from domain.src.entities.customer import Customer, CustomerStatus, CustomerSummary, CustomerType
-from domain.src.exceptions.customer_exceptions import CustomerCreationError
+from domain.src.exceptions.customer_exceptions import CustomerCreationError, CustomerNotFoundError
 from domain.src.ports.repositories.CustomerRepository import CustomerRepository
 
 
@@ -109,3 +110,23 @@ class CustomerRepositoryAdapter(CustomerRepository):
         db_customers = self.session.scalars(stmt).all()
 
         return [self._to_domain(c) for c in db_customers], summary
+
+    def update_stats(
+        self,
+        id: UUID,
+        services_count_delta: int,
+        total_billed_delta: float,
+        last_service_date: datetime,
+    ) -> None:
+        db_customer = self.session.get(CustomerModel, id)
+        if db_customer is None:
+            raise CustomerNotFoundError(f"Customer with id '{id}' not found.")
+
+        db_customer.services_count += services_count_delta
+        db_customer.total_billed += total_billed_delta
+
+        current = db_customer.last_service_date
+        if current is None or last_service_date > current:
+            db_customer.last_service_date = last_service_date
+
+        self.session.commit()
