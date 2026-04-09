@@ -58,6 +58,7 @@ def create_service(
         hourly_rate=service.hourly_rate,
         total_cost=service.total_cost,
         charged_price=service.charged_price,
+        margin=service.margin,
         status=service.status,
         internal_notes=service.internal_notes,
         created_at=service.created_at,

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from adapters.src.models.EmployeeModel import EmployeeModel
 from domain.src.entities.employee import Employee, EmployeeSummary
-from domain.src.exceptions.employee_exceptions import EmployeeCreationError
+from domain.src.exceptions.employee_exceptions import EmployeeCreationError, EmployeeNotFoundError
 from domain.src.ports.repositories.EmployeeRepository import EmployeeRepository
 
 class EmployeeRepositoryAdapter(EmployeeRepository):
@@ -67,3 +67,20 @@ class EmployeeRepositoryAdapter(EmployeeRepository):
         )
 
         return [self._to_domain(e) for e in db_employees], summary
+
+    def update_stats(
+        self,
+        id: UUID,
+        services_count_delta: int,
+        worked_hours_delta: float,
+        employee_cost_delta: float,
+    ) -> None:
+        db_employee = self.session.get(EmployeeModel, id)
+        if db_employee is None:
+            raise EmployeeNotFoundError(f"Employee with id '{id}' not found.")
+
+        db_employee.services_count += services_count_delta
+        db_employee.worked_hours += worked_hours_delta
+        db_employee.employee_cost += employee_cost_delta
+
+        self.session.commit()

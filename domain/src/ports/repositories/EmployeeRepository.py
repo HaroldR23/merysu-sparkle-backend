@@ -19,3 +19,14 @@ class EmployeeRepository(ABC):
     def get_all_with_summary(self) -> tuple[list[Employee], EmployeeSummary]:
         """Return all employees alongside aggregated metrics."""
         pass
+
+    @abstractmethod
+    def update_stats(
+        self,
+        id: UUID,
+        services_count_delta: int,
+        worked_hours_delta: float,
+        employee_cost_delta: float,
+    ) -> None:
+        """Increment services_count, worked_hours, and employee_cost for the given employee."""
+        pass

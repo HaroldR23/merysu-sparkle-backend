@@ -19,6 +19,7 @@ class ServiceCreationOutput:
     hourly_rate: float
     total_cost: float
     charged_price: float
+    margin: float
     status: ServiceStatus
     created_at: datetime
     updated_at: datetime
