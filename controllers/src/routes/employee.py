@@ -26,6 +26,7 @@ def create_employee(
     employee = employee_creation_use_case(
         employee_creation_input=EmployeeCreationInput(
             name=employee_dto.name,
+            entry_date=employee_dto.entry_date,
             services_count=employee_dto.services_count,
             phone_number=employee_dto.phone_number,
             worked_hours=employee_dto.worked_hours,
@@ -36,6 +37,7 @@ def create_employee(
     return EmployeeCreateResponseDTO(
         id=employee.id,
         name=employee.name,
+        entry_date=employee.entry_date,
         services_count=employee.services_count,
         phone_number=employee.phone_number,
         worked_hours=employee.worked_hours,
@@ -60,9 +62,12 @@ def get_employees(
             EmployeeListItemResponseDTO(
                 id=e.id,
                 name=e.name,
+                entry_date=e.entry_date,
+                phone_number=e.phone_number,
                 worked_hours=e.worked_hours,
                 employee_cost=e.employee_cost,
                 services_count=e.services_count,
+                productivity=e.productivity,
             )
             for e in result.employees
         ],

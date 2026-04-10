@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import date
 from uuid import UUID
 
 
@@ -6,6 +7,7 @@ from uuid import UUID
 class EmployeeCreationOutput:
     id: UUID
     name: str
+    entry_date: date
     services_count: int
     phone_number: str
     worked_hours: float

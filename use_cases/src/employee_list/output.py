@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import date
 from uuid import UUID
 
 
@@ -14,9 +15,12 @@ class EmployeeSummaryOutput:
 class EmployeeListItemOutput:
     id: UUID
     name: str
+    entry_date: date
+    phone_number: str
     worked_hours: float
     employee_cost: float
     services_count: int
+    productivity: float
 
 
 @dataclass

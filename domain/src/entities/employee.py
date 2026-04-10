@@ -1,10 +1,12 @@
 from dataclasses import dataclass
+from datetime import date
 from uuid import UUID
 
 
 @dataclass
 class Employee:
     name: str
+    entry_date: date
     services_count: int
     phone_number: str
     worked_hours: float

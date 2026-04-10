@@ -17,6 +17,7 @@ class EmployeeRepositoryAdapter(EmployeeRepository):
         return Employee(
             id=cast(UUID, db_employee.id),
             name=db_employee.name,
+            entry_date=db_employee.entry_date,
             services_count=db_employee.services_count,
             phone_number=db_employee.phone_number,
             worked_hours=db_employee.worked_hours,
@@ -26,6 +27,7 @@ class EmployeeRepositoryAdapter(EmployeeRepository):
     def create(self, employee: Employee) -> Employee:
         db_employee = EmployeeModel(
             name=employee.name,
+            entry_date=employee.entry_date,
             services_count=employee.services_count,
             phone_number=employee.phone_number,
             worked_hours=employee.worked_hours,

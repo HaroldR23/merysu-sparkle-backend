@@ -27,6 +27,7 @@ class EmployeeCreationUseCase:
 
         employee = Employee(
             name=employee_creation_input.name,
+            entry_date=employee_creation_input.entry_date,
             services_count=employee_creation_input.services_count,
             phone_number=employee_creation_input.phone_number,
             worked_hours=employee_creation_input.worked_hours,
@@ -41,6 +42,7 @@ class EmployeeCreationUseCase:
         return EmployeeCreationOutput(
             id=created.id,
             name=created.name,
+            entry_date=created.entry_date,
             services_count=created.services_count,
             phone_number=created.phone_number,
             worked_hours=created.worked_hours,
