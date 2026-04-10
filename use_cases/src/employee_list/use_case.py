@@ -27,9 +27,12 @@ class EmployeeListUseCase:
                 EmployeeListItemOutput(
                     id=cast(UUID, e.id),
                     name=e.name,
+                    entry_date=e.entry_date,
+                    phone_number=e.phone_number,
                     worked_hours=e.worked_hours,
                     employee_cost=e.employee_cost,
                     services_count=e.services_count,
+                    productivity=round(e.services_count / e.worked_hours, 2) if e.worked_hours > 0 else 0.0,
                 )
                 for e in employees
             ],

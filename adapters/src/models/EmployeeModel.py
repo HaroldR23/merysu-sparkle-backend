@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from datetime import date
 from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 
-from sqlalchemy import Float, Integer, String
+from sqlalchemy import Date, Float, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .Base import Base
@@ -18,6 +19,7 @@ class EmployeeModel(Base):
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     name: Mapped[str] = mapped_column(String, nullable=False)
+    entry_date: Mapped[date] = mapped_column(Date, nullable=False)
     services_count: Mapped[int] = mapped_column(Integer, nullable=False)
     phone_number: Mapped[str] = mapped_column(String, nullable=False)
     worked_hours: Mapped[float] = mapped_column(Float, nullable=False)

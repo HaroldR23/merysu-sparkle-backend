@@ -1,9 +1,12 @@
+from datetime import date
+
 from pydantic import BaseModel, Field, field_validator
 from uuid import UUID
 
 
 class EmployeeCreateDTO(BaseModel):
     name: str
+    entry_date: date
     services_count: int = Field(ge=0)
     phone_number: str
     worked_hours: float = Field(ge=0)
@@ -20,6 +23,7 @@ class EmployeeCreateDTO(BaseModel):
 class EmployeeCreateResponseDTO(BaseModel):
     id: UUID
     name: str
+    entry_date: date
     services_count: int
     phone_number: str
     worked_hours: float
@@ -36,11 +40,17 @@ class EmployeeSummaryResponseDTO(BaseModel):
 class EmployeeListItemResponseDTO(BaseModel):
     id: UUID
     name: str
+    entry_date: date
+    phone_number: str
     worked_hours: float
     employee_cost: float
     services_count: int
+    productivity: float
 
 
+class EmployeeListResponseDTO(BaseModel):
+    summary: EmployeeSummaryResponseDTO
+    employees: list[EmployeeListItemResponseDTO]
 class EmployeeListResponseDTO(BaseModel):
     summary: EmployeeSummaryResponseDTO
     employees: list[EmployeeListItemResponseDTO]
