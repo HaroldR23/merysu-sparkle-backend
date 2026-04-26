@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 
 from http import HTTPStatus
 
+from domain.src.exceptions.auth_exceptions import InvalidCredentialsError
 from domain.src.exceptions.customer_exceptions import CustomerCreationError, CustomerNotFoundError, InvalidCustomerDataError
 from domain.src.exceptions.employee_exceptions import EmployeeCreationError, EmployeeNotFoundError, InvalidEmployeeDataError
 from domain.src.exceptions.quote_request_exceptions import CaptchaValidationError, EmailSendingError, InvalidEmailError
@@ -86,6 +87,13 @@ def register_exception_handler(app: FastAPI) -> None:
     def service_creation_error_handler(request: Request, exc: ServiceCreationError):
         return JSONResponse(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            content={"detail": exc.message},
+        )
+
+    @app.exception_handler(InvalidCredentialsError)
+    def invalid_credentials_handler(request: Request, exc: InvalidCredentialsError):
+        return JSONResponse(
+            status_code=HTTPStatus.UNAUTHORIZED,
             content={"detail": exc.message},
         )
 
