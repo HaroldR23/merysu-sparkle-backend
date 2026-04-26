@@ -5,6 +5,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 from controllers.src.exceptions.handler_exceptions import register_exception_handler
+from controllers.src.routes.auth import auth_router
 from controllers.src.routes.customer import customer_router
 from controllers.src.routes.employee import employee_router
 from controllers.src.routes.quote_request import quote_request_router
@@ -28,6 +29,7 @@ def create_app() -> FastAPI:
       allow_headers=["*"],
     )
     
+    app.include_router(auth_router)
     app.include_router(quote_request_router)
     app.include_router(employee_router)
     app.include_router(customer_router)

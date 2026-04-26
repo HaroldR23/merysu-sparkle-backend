@@ -14,11 +14,16 @@ if ENV == "production":
     RESEND_API_KEY = secrets_manager.get_secret('RESEND_API_KEY')
     TURNSTILE_SECRET_KEY = secrets_manager.get_secret('TURNSTILE_SECRET_KEY')
     DATABASE_URL = secrets_manager.get_secret('DATABASE_URL')
+    JWT_SECRET = secrets_manager.get_secret('JWT_SECRET')
 
 else:
     RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
     TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY", "")
     DATABASE_URL = os.environ.get("DATABASE_URL", "")
+    JWT_SECRET = os.environ.get("JWT_SECRET", "")
+
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
 
 def get_allowed_origins() -> list[str]:
     origins = os.environ.get("CORS_ALLOWED_ORIGINS", "")
