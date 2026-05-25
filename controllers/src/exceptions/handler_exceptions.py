@@ -9,7 +9,7 @@ from domain.src.exceptions.auth_exceptions import InvalidCredentialsError
 from domain.src.exceptions.customer_exceptions import CustomerCreationError, CustomerNotFoundError, InvalidCustomerDataError
 from domain.src.exceptions.employee_exceptions import EmployeeCreationError, EmployeeNotFoundError, InvalidEmployeeDataError
 from domain.src.exceptions.quote_request_exceptions import CaptchaValidationError, EmailSendingError, InvalidEmailError
-from domain.src.exceptions.service_exceptions import InvalidServiceDataError, ServiceCreationError
+from domain.src.exceptions.service_exceptions import InvalidServiceDataError, ServiceCreationError, ServiceNotFoundError, ServiceUpdateError
 
 def register_exception_handler(app: FastAPI) -> None:
 
@@ -85,6 +85,20 @@ def register_exception_handler(app: FastAPI) -> None:
 
     @app.exception_handler(ServiceCreationError)
     def service_creation_error_handler(request: Request, exc: ServiceCreationError):
+        return JSONResponse(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            content={"detail": exc.message},
+        )
+
+    @app.exception_handler(ServiceNotFoundError)
+    def service_not_found_handler(request: Request, exc: ServiceNotFoundError):
+        return JSONResponse(
+            status_code=HTTPStatus.NOT_FOUND,
+            content={"detail": exc.message},
+        )
+
+    @app.exception_handler(ServiceUpdateError)
+    def service_update_error_handler(request: Request, exc: ServiceUpdateError):
         return JSONResponse(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             content={"detail": exc.message},

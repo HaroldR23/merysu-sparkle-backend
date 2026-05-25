@@ -19,7 +19,7 @@ class ServiceStatus(str, Enum):
 
 @dataclass
 class Service:
-    date: date
+    date: datetime
     start_time: time
     end_time: time
     customer_id: UUID
@@ -41,7 +41,7 @@ class Service:
 @dataclass
 class ServiceListItem:
     id: UUID
-    date: date
+    date: datetime
     start_time: time
     end_time: time
     customer_id: UUID

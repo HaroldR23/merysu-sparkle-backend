@@ -1,21 +1,27 @@
 from datetime import date
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query
 
 from controllers.src.dependencies.service_dependencies import (
     get_service_creation_use_case,
     get_service_list_use_case,
+    get_service_update_use_case,
 )
 from controllers.src.dtos.service import (
     ServiceCreateDTO,
     ServiceCreateResponseDTO,
     ServiceListItemResponseDTO,
     ServiceListResponseDTO,
+    ServicePatchDTO,
+    ServiceUpdateResponseDTO,
 )
 from use_cases.src.service_creation.input import ServiceCreationInput
 from use_cases.src.service_creation.use_case import ServiceCreationUseCase
 from use_cases.src.service_list.input import ServiceListInput
 from use_cases.src.service_list.use_case import ServiceListUseCase
+from use_cases.src.service_update.input import ServiceUpdateInput
+from use_cases.src.service_update.use_case import ServiceUpdateUseCase
 
 service_router = APIRouter()
 
@@ -108,4 +114,52 @@ def get_services(
             )
             for s in result.services
         ]
+    )
+
+
+@service_router.patch("/services/{service_id}", status_code=200, response_model=ServiceUpdateResponseDTO)
+def update_service(
+    service_id: UUID,
+    service_dto: ServicePatchDTO,
+    service_update_use_case: ServiceUpdateUseCase = Depends(get_service_update_use_case),
+):
+    service = service_update_use_case(
+        service_update_input=ServiceUpdateInput(
+            id=service_id,
+            date=service_dto.date,
+            start_time=service_dto.start_time,
+            end_time=service_dto.end_time,
+            customer_id=service_dto.customer_id,
+            employee_ids=service_dto.employee_ids,
+            address=service_dto.address,
+            service_type=service_dto.service_type,
+            distance_km=service_dto.distance_km,
+            worked_hours=service_dto.worked_hours,
+            hourly_rate=service_dto.hourly_rate,
+            total_cost=service_dto.total_cost,
+            charged_price=service_dto.charged_price,
+            status=service_dto.status,
+            internal_notes=service_dto.internal_notes,
+        )
+    )
+
+    return ServiceUpdateResponseDTO(
+        id=service.id,
+        date=service.date,
+        start_time=service.start_time,
+        end_time=service.end_time,
+        customer_id=service.customer_id,
+        employee_ids=service.employee_ids,
+        address=service.address,
+        service_type=service.service_type,
+        distance_km=service.distance_km,
+        worked_hours=service.worked_hours,
+        hourly_rate=service.hourly_rate,
+        total_cost=service.total_cost,
+        charged_price=service.charged_price,
+        margin=service.margin,
+        status=service.status,
+        internal_notes=service.internal_notes,
+        created_at=service.created_at,
+        updated_at=service.updated_at,
     )
