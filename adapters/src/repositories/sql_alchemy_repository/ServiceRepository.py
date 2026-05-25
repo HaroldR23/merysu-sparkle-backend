@@ -9,7 +9,7 @@ from adapters.src.models.CustomerModel import CustomerModel
 from adapters.src.models.EmployeeModel import EmployeeModel
 from adapters.src.models.ServiceModel import ServiceModel
 from domain.src.entities.service import Service, ServiceListItem, ServiceStatus, ServiceType
-from domain.src.exceptions.service_exceptions import ServiceCreationError
+from domain.src.exceptions.service_exceptions import ServiceCreationError, ServiceUpdateError
 from domain.src.ports.repositories.ServiceRepository import ServiceRepository
 
 
@@ -94,6 +94,59 @@ class ServiceRepositoryAdapter(ServiceRepository):
         except Exception as e:
             self.session.rollback()
             raise ServiceCreationError() from e
+
+        return self._to_domain(db_service)
+
+    def get_by_id(self, id: UUID) -> Service | None:
+        stmt = (
+            select(ServiceModel)
+            .where(ServiceModel.id == id)
+            .options(selectinload(ServiceModel.employees))
+        )
+        db_service = self.session.scalars(stmt).first()
+        if db_service is None:
+            return None
+        return self._to_domain(db_service)
+
+    def update(self, service: Service) -> Service:
+        stmt = (
+            select(ServiceModel)
+            .where(ServiceModel.id == service.id)
+            .options(selectinload(ServiceModel.employees))
+        )
+        db_service = self.session.scalars(stmt).first()
+        if db_service is None:
+            raise ServiceUpdateError(f"Service with id '{service.id}' not found for update.")
+
+        db_employees: list[EmployeeModel] = []
+        if service.employee_ids:
+            db_employees = list(
+                self.session.scalars(
+                    select(EmployeeModel).where(EmployeeModel.id.in_(service.employee_ids))
+                ).all()
+            )
+
+        db_service.date = service.date
+        db_service.start_time = service.start_time
+        db_service.end_time = service.end_time
+        db_service.customer_id = service.customer_id
+        db_service.address = service.address
+        db_service.service_type = service.service_type.value
+        db_service.distance_km = service.distance_km
+        db_service.worked_hours = service.worked_hours
+        db_service.hourly_rate = service.hourly_rate
+        db_service.total_cost = service.total_cost
+        db_service.charged_price = service.charged_price
+        db_service.status = service.status.value
+        db_service.internal_notes = service.internal_notes
+        db_service.employees = db_employees
+
+        try:
+            self.session.commit()
+            self.session.refresh(db_service)
+        except Exception as e:
+            self.session.rollback()
+            raise ServiceUpdateError() from e
 
         return self._to_domain(db_service)
 
