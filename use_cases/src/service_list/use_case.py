@@ -29,14 +29,21 @@ class ServiceListUseCase:
                 ServiceListItemOutput(
                     id=cast(UUID, item.id),
                     date=item.date,
+                    start_time=item.start_time,
+                    end_time=item.end_time,
+                    customer_id=item.customer_id,
                     customer_name=item.customer_name,
+                    address=item.address,
                     service_type=item.service_type,
+                    distance_km=item.distance_km,
+                    hourly_rate=item.hourly_rate,
                     employee_names=item.employee_names,
                     worked_hours=item.worked_hours,
                     charged_price=item.charged_price,
                     total_cost=item.total_cost,
                     margin=item.margin,
                     status=item.status,
+                    internal_notes=item.internal_notes,
                 )
                 for item in items
             ]

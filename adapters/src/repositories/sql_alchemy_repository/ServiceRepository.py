@@ -45,14 +45,21 @@ class ServiceRepositoryAdapter(ServiceRepository):
         return ServiceListItem(
             id=cast(UUID, db_service.id),
             date=db_service.date,
+            start_time=db_service.start_time,
+            end_time=db_service.end_time,
+            customer_id=cast(UUID, db_service.customer_id),
             customer_name=db_service.customer.name,
+            address=db_service.address,
             service_type=ServiceType(db_service.service_type),
+            distance_km=db_service.distance_km,
+            hourly_rate=db_service.hourly_rate,
             employee_names=[e.name for e in db_service.employees],
             worked_hours=db_service.worked_hours,
             charged_price=db_service.charged_price,
             total_cost=db_service.total_cost,
             margin=margin,
             status=ServiceStatus(db_service.status),
+            internal_notes=db_service.internal_notes,
         )
 
     def create(self, service: Service) -> Service:

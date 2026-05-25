@@ -90,14 +90,21 @@ def get_services(
             ServiceListItemResponseDTO(
                 id=s.id,
                 date=s.date,
+                start_time=s.start_time,
+                end_time=s.end_time,
+                customer_id=s.customer_id,
                 customer_name=s.customer_name,
+                address=s.address,
                 service_type=s.service_type,
+                distance_km=s.distance_km,
+                hourly_rate=s.hourly_rate,
                 employee_names=s.employee_names,
                 worked_hours=s.worked_hours,
                 charged_price=s.charged_price,
                 total_cost=s.total_cost,
                 margin=s.margin,
                 status=s.status,
+                internal_notes=s.internal_notes,
             )
             for s in result.services
         ]
