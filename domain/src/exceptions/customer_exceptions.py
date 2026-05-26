@@ -17,3 +17,10 @@ class CustomerNotFoundError(Exception):
     def __init__(self, message="Customer not found."):
         self.message = message
         super().__init__(self.message)
+
+
+class CustomerUpdateError(Exception):
+    """Exception raised when persisting a customer update fails."""
+    def __init__(self, message="Failed to update customer."):
+        self.message = message
+        super().__init__(self.message)
