@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from adapters.src.models.CustomerModel import CustomerModel
 from domain.src.entities.customer import Customer, CustomerStatus, CustomerSummary, CustomerType
-from domain.src.exceptions.customer_exceptions import CustomerCreationError, CustomerNotFoundError
+from domain.src.exceptions.customer_exceptions import CustomerCreationError, CustomerNotFoundError, CustomerUpdateError
 from domain.src.ports.repositories.CustomerRepository import CustomerRepository
 
 
@@ -130,3 +130,29 @@ class CustomerRepositoryAdapter(CustomerRepository):
             db_customer.last_service_date = last_service_date
 
         self.session.commit()
+
+    def update(self, customer: Customer) -> Customer:
+        db_customer = self.session.get(CustomerModel, customer.id)
+        if db_customer is None:
+            raise CustomerNotFoundError(f"Customer with id '{customer.id}' not found.")
+
+        db_customer.name = customer.name
+        db_customer.type = customer.type.value
+        db_customer.status = customer.status.value
+        db_customer.services_count = customer.services_count
+        db_customer.total_billed = customer.total_billed
+        db_customer.last_service_date = customer.last_service_date
+        db_customer.email = customer.email
+        db_customer.phone_number = customer.phone_number
+        db_customer.location = customer.location
+        db_customer.city = customer.city
+        db_customer.notes = customer.notes
+
+        try:
+            self.session.commit()
+            self.session.refresh(db_customer)
+        except Exception as e:
+            self.session.rollback()
+            raise CustomerUpdateError() from e
+
+        return self._to_domain(db_customer)

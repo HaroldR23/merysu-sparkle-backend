@@ -69,3 +69,41 @@ class CustomerListItemResponseDTO(BaseModel):
 class CustomerListResponseDTO(BaseModel):
     summary: CustomerSummaryResponseDTO
     customers: list[CustomerListItemResponseDTO]
+
+
+class CustomerUpdateDTO(BaseModel):
+    name: str | None = None
+    type: CustomerType | None = None
+    status: CustomerStatus | None = None
+    services_count: int | None = Field(default=None, ge=0)
+    total_billed: float | None = Field(default=None, ge=0)
+    last_service_date: datetime | None = None
+    email: str | None = None
+    phone_number: str | None = None
+    location: str | None = None
+    city: str | None = None
+    notes: str | None = None
+
+    @field_validator("name")
+    @classmethod
+    def must_not_be_blank(cls, value: str | None) -> str | None:
+        if value is not None and not value.strip():
+            raise ValueError("Field must not be blank.")
+        return value
+
+
+class CustomerUpdateResponseDTO(BaseModel):
+    id: UUID
+    name: str
+    type: CustomerType
+    services_count: int
+    total_billed: float
+    status: CustomerStatus
+    last_service_date: datetime | None
+    email: str | None
+    phone_number: str | None
+    location: str | None
+    city: str | None
+    notes: str | None
+    created_at: datetime
+    updated_at: datetime

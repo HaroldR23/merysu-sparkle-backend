@@ -38,3 +38,8 @@ class CustomerRepository(ABC):
     ) -> None:
         """Increment services_count and total_billed; update last_service_date if more recent."""
         pass
+
+    @abstractmethod
+    def update(self, customer: Customer) -> Customer:
+        """Persist updated customer fields and return the refreshed entity."""
+        pass
