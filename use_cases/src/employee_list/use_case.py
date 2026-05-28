@@ -33,6 +33,8 @@ class EmployeeListUseCase:
                     employee_cost=e.employee_cost,
                     services_count=e.services_count,
                     productivity=round(e.services_count / e.worked_hours, 2) if e.worked_hours > 0 else 0.0,
+                    notes=e.notes,
+                    status=e.status,
                 )
                 for e in employees
             ],

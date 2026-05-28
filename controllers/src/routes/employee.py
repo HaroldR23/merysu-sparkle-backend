@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends
+from uuid import UUID
 
 from controllers.src.dependencies.employee_dependencies import (
     get_employee_creation_use_case,
     get_employee_list_use_case,
+    get_employee_update_use_case,
 )
 from controllers.src.dtos.employee import (
     EmployeeCreateDTO,
@@ -10,10 +12,14 @@ from controllers.src.dtos.employee import (
     EmployeeListItemResponseDTO,
     EmployeeListResponseDTO,
     EmployeeSummaryResponseDTO,
+    EmployeeUpdateDTO,
+    EmployeeUpdateResponseDTO,
 )
 from use_cases.src.employee_creation.input import EmployeeCreationInput
 from use_cases.src.employee_creation.use_case import EmployeeCreationUseCase
 from use_cases.src.employee_list.use_case import EmployeeListUseCase
+from use_cases.src.employee_update.input import EmployeeUpdateInput
+from use_cases.src.employee_update.use_case import EmployeeUpdateUseCase
 
 employee_router = APIRouter()
 
@@ -42,6 +48,8 @@ def create_employee(
         phone_number=employee.phone_number,
         worked_hours=employee.worked_hours,
         employee_cost=employee.employee_cost,
+        notes=employee.notes,
+        status=employee.status,
     )
 
 
@@ -68,7 +76,42 @@ def get_employees(
                 employee_cost=e.employee_cost,
                 services_count=e.services_count,
                 productivity=e.productivity,
+                notes=e.notes,
+                status=e.status,
             )
             for e in result.employees
         ],
+    )
+
+
+@employee_router.patch("/employees/{id}", status_code=200, response_model=EmployeeUpdateResponseDTO)
+def update_employee(
+    id: UUID,
+    employee_dto: EmployeeUpdateDTO,
+    employee_update_use_case: EmployeeUpdateUseCase = Depends(get_employee_update_use_case),
+):
+    employee = employee_update_use_case(
+        employee_update_input=EmployeeUpdateInput(
+            id=id,
+            name=employee_dto.name,
+            entry_date=employee_dto.entry_date,
+            phone_number=employee_dto.phone_number,
+            services_count=employee_dto.services_count,
+            worked_hours=employee_dto.worked_hours,
+            employee_cost=employee_dto.employee_cost,
+            notes=employee_dto.notes,
+            status=employee_dto.status,
+        )
+    )
+
+    return EmployeeUpdateResponseDTO(
+        id=employee.id,
+        name=employee.name,
+        entry_date=employee.entry_date,
+        phone_number=employee.phone_number,
+        services_count=employee.services_count,
+        worked_hours=employee.worked_hours,
+        employee_cost=employee.employee_cost,
+        notes=employee.notes,
+        status=employee.status,
     )

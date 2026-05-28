@@ -24,6 +24,8 @@ class EmployeeModel(Base):
     phone_number: Mapped[str] = mapped_column(String, nullable=False)
     worked_hours: Mapped[float] = mapped_column(Float, nullable=False)
     employee_cost: Mapped[float] = mapped_column(Float, nullable=False)
+    notes: Mapped[str | None] = mapped_column(String, nullable=True)
+    status: Mapped[str] = mapped_column(String, nullable=False, default="active")
 
     services: Mapped[list["ServiceModel"]] = relationship(
         "ServiceModel", secondary=service_employees, back_populates="employees"
