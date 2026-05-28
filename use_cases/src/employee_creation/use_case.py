@@ -47,4 +47,6 @@ class EmployeeCreationUseCase:
             phone_number=created.phone_number,
             worked_hours=created.worked_hours,
             employee_cost=created.employee_cost,
+            notes=created.notes,
+            status=created.status,
         )

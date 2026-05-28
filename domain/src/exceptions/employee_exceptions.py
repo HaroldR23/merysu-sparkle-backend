@@ -17,3 +17,10 @@ class EmployeeNotFoundError(Exception):
     def __init__(self, message="Employee not found."):
         self.message = message
         super().__init__(self.message)
+
+
+class EmployeeUpdateError(Exception):
+    """Exception raised when persisting an employee update fails."""
+    def __init__(self, message="Failed to update employee."):
+        self.message = message
+        super().__init__(self.message)

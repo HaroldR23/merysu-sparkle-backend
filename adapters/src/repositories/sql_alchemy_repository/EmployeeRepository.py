@@ -5,8 +5,8 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from adapters.src.models.EmployeeModel import EmployeeModel
-from domain.src.entities.employee import Employee, EmployeeSummary
-from domain.src.exceptions.employee_exceptions import EmployeeCreationError, EmployeeNotFoundError
+from domain.src.entities.employee import Employee, EmployeeSummary, EmployeeStatus
+from domain.src.exceptions.employee_exceptions import EmployeeCreationError, EmployeeNotFoundError, EmployeeUpdateError
 from domain.src.ports.repositories.EmployeeRepository import EmployeeRepository
 
 class EmployeeRepositoryAdapter(EmployeeRepository):
@@ -22,6 +22,8 @@ class EmployeeRepositoryAdapter(EmployeeRepository):
             phone_number=db_employee.phone_number,
             worked_hours=db_employee.worked_hours,
             employee_cost=db_employee.employee_cost,
+            notes=db_employee.notes,
+            status=EmployeeStatus(db_employee.status),
         )
 
     def create(self, employee: Employee) -> Employee:
@@ -32,6 +34,8 @@ class EmployeeRepositoryAdapter(EmployeeRepository):
             phone_number=employee.phone_number,
             worked_hours=employee.worked_hours,
             employee_cost=employee.employee_cost,
+            notes=employee.notes,
+            status=employee.status.value,
         )
         try:
             self.session.add(db_employee)
@@ -86,3 +90,26 @@ class EmployeeRepositoryAdapter(EmployeeRepository):
         db_employee.employee_cost += employee_cost_delta
 
         self.session.commit()
+
+    def update(self, employee: Employee) -> Employee:
+        db_employee = self.session.get(EmployeeModel, employee.id)
+        if db_employee is None:
+            raise EmployeeNotFoundError(f"Employee with id '{employee.id}' not found.")
+
+        db_employee.name = employee.name
+        db_employee.entry_date = employee.entry_date
+        db_employee.services_count = employee.services_count
+        db_employee.phone_number = employee.phone_number
+        db_employee.worked_hours = employee.worked_hours
+        db_employee.employee_cost = employee.employee_cost
+        db_employee.notes = employee.notes
+        db_employee.status = employee.status.value
+
+        try:
+            self.session.commit()
+            self.session.refresh(db_employee)
+        except Exception as e:
+            self.session.rollback()
+            raise EmployeeUpdateError() from e
+
+        return self._to_domain(db_employee)

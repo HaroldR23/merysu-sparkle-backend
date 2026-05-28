@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
-from domain.src.entities.employee import Employee, EmployeeSummary
+from domain.src.entities.employee import Employee, EmployeeSummary, EmployeeStatus
 
 
 class EmployeeRepository(ABC):
@@ -29,4 +29,9 @@ class EmployeeRepository(ABC):
         employee_cost_delta: float,
     ) -> None:
         """Increment services_count, worked_hours, and employee_cost for the given employee."""
+        pass
+
+    @abstractmethod
+    def update(self, employee: Employee) -> Employee:
+        """Persist updated employee fields and return the refreshed entity."""
         pass

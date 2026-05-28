@@ -1,6 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from uuid import UUID
+
+from domain.src.entities.employee import EmployeeStatus
 
 
 @dataclass
@@ -21,6 +23,8 @@ class EmployeeListItemOutput:
     employee_cost: float
     services_count: int
     productivity: float
+    status: EmployeeStatus = field(default=EmployeeStatus.active)
+    notes: str | None = None
 
 
 @dataclass

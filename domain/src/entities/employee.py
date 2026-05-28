@@ -1,6 +1,12 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
+from enum import Enum
 from uuid import UUID
+
+
+class EmployeeStatus(str, Enum):
+    active = "active"
+    inactive = "inactive"
 
 
 @dataclass
@@ -12,6 +18,8 @@ class Employee:
     worked_hours: float
     employee_cost: float
     id: UUID | None = None
+    notes: str | None = None
+    status: EmployeeStatus = field(default=EmployeeStatus.active)
 
 
 @dataclass

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import date
 from uuid import UUID
 
@@ -6,13 +6,13 @@ from domain.src.entities.employee import EmployeeStatus
 
 
 @dataclass
-class EmployeeCreationOutput:
+class EmployeeUpdateOutput:
     id: UUID
     name: str
     entry_date: date
-    services_count: int
     phone_number: str
+    services_count: int
     worked_hours: float
     employee_cost: float
-    status: EmployeeStatus = field(default=EmployeeStatus.active)
+    status: EmployeeStatus
     notes: str | None = None
