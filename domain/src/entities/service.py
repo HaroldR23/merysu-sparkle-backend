@@ -15,6 +15,8 @@ class ServiceType(str, Enum):
 class ServiceStatus(str, Enum):
     completed = "completed"
     pending = "pending"
+    scheduled = "scheduled"
+    duplicated = "duplicated"
 
 
 @dataclass
